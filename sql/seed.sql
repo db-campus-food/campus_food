@@ -9,21 +9,26 @@ INSERT INTO building (building_name) VALUES
   ('도서관'),     -- 2
   ('공학관');     -- 3
 
--- 테스트 관리자 계정: 아이디 admin / 비밀번호 admin1234 (bcrypt 해시)
+-- 테스트 관리자 3명: 비밀번호는 모두 admin1234 (bcrypt 해시)
+-- 관리자는 자기가 담당하는 매장만 수정할 수 있다.
 INSERT INTO admin (admin_name, login_id, password_hash) VALUES
-  ('관리자', 'admin', '$2b$12$4FfZCMNYNmmdjUwfignd5u/BIOGn8tHMEcqjE8Sc47Arkj/833Iaq');
+  ('학생식당 관리자',   'admin1', '$2b$12$4FfZCMNYNmmdjUwfignd5u/BIOGn8tHMEcqjE8Sc47Arkj/833Iaq'),  -- 1
+  ('음식점 관리자',     'admin2', '$2b$12$4FfZCMNYNmmdjUwfignd5u/BIOGn8tHMEcqjE8Sc47Arkj/833Iaq'),  -- 2
+  ('카페 관리자',       'admin3', '$2b$12$4FfZCMNYNmmdjUwfignd5u/BIOGn8tHMEcqjE8Sc47Arkj/833Iaq');  -- 3
 
 INSERT INTO category (category_name) VALUES
   ('한식'), ('중식'), ('일식'), ('양식'), ('분식'), ('음료'), ('디저트');
 -- category_id: 1 한식, 2 중식, 3 일식, 4 양식, 5 분식, 6 음료, 7 디저트
 
 INSERT INTO store (store_name, store_type, location_info, is_sample, building_id, admin_id) VALUES
-  ('샘플 학생식당',   '학생식당',    '1층',       TRUE, 1, 1),  -- 1
-  ('샘플 분식코너',   '일반 음식점', '2층',       TRUE, 1, 1),  -- 2
-  ('샘플 북카페',     '카페',        '1층 로비',  TRUE, 2, 1),  -- 3
-  ('샘플 덮밥집',     '일반 음식점', '지하 1층',  TRUE, 3, 1),  -- 4
-  ('샘플 중식당',     '일반 음식점', '지하 1층',  TRUE, 3, 1),  -- 5
-  ('샘플 커피스탠드', '카페',        '3층',       TRUE, 1, 1);  -- 6
+-- 위치에는 건물명을 쓰지 않고 세부 위치만 적는다 (건물은 building_id 로 연결)
+-- 담당 관리자: 1 학생식당 / 2 분식코너·덮밥집·중식당 / 3 카페
+  ('샘플 학생식당',   '학생식당',   '1층',       TRUE, 1, 1),  -- 1
+  ('샘플 분식코너',   '일반음식점', '2층',       TRUE, 1, 2),  -- 2
+  ('샘플 북카페',     '카페',       '1층 로비',  TRUE, 2, 3),  -- 3
+  ('샘플 덮밥집',     '일반음식점', '지하 1층',  TRUE, 3, 2),  -- 4
+  ('샘플 중식당',     '일반음식점', '지하 1층',  TRUE, 3, 2),  -- 5
+  ('샘플 커피스탠드', '카페',       '3층',       TRUE, 1, 3);  -- 6
 
 INSERT INTO menu (menu_name, price, is_available, is_sample, store_id, category_id) VALUES
   -- 1 샘플 학생식당
