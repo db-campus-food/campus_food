@@ -36,19 +36,38 @@ def execute(sql, params=None):
 # ---------------- 일반 사용자 기능 ----------------
 
 def get_categories():
+    """카테고리 목록 (기능 4의 선택지)."""
     return fetch_all("SELECT category_id, category_name FROM category ORDER BY category_id")
 
 
-def search_menus(keyword="", max_price=None, category=None, order="asc"):
-    """메뉴 검색 + 예산 + 카테고리 + 가격 정렬 (기능 2·3·4)."""
+def get_stores():
+    """교내 매장 목록 + 건물·위치·판매 중 메뉴 수 (기능 1)."""
     sql = """
-        SELECT s.store_name   AS 매장명,
-               m.menu_name    AS 메뉴명,
-               m.price        AS 가격,
-               c.category_name AS 종류,
-               s.store_type   AS 매장유형,
-               b.building_name AS 건물,
-               s.location_info AS 위치
+        SELECT s.store_id, s.store_name, s.store_type,
+               b.building_name, s.location_info, s.is_sample,
+               COUNT(m.menu_id) AS menu_count
+        FROM store s
+        JOIN building b ON s.building_id = b.building_id
+        LEFT JOIN menu m ON m.store_id = s.store_id AND m.is_available = TRUE
+        GROUP BY s.store_id, s.store_name, s.store_type,
+                 b.building_name, s.location_info, s.is_sample
+        ORDER BY b.building_name, s.store_name
+    """
+    return fetch_all(sql)
+
+
+def search_menus(keyword="", max_price=None, category=None, order="asc"):
+    """메뉴 검색 + 예산 + 카테고리 + 가격 정렬 (기능 2·3·4).
+
+    keyword   : 메뉴명 또는 매장명에 포함된 글자 ("" 이면 조건 없음)
+    max_price : 최대 예산 (None 이면 조건 없음)
+    category  : 카테고리명 (None 또는 "전체" 이면 조건 없음)
+    order     : "asc" 가격 낮은 순 / "desc" 가격 높은 순
+    """
+    sql = """
+        SELECT m.menu_id, m.menu_name, m.price, c.category_name,
+               s.store_name, s.store_type, b.building_name, s.location_info,
+               (m.is_sample OR s.is_sample) AS is_sample
         FROM menu m
         JOIN store s    ON m.store_id = s.store_id
         JOIN building b ON s.building_id = b.building_id
@@ -65,7 +84,7 @@ def search_menus(keyword="", max_price=None, category=None, order="asc"):
     if category and category != "전체":
         sql += " AND c.category_name = %s"
         params.append(category)
-    sql += " ORDER BY m.price " + ("DESC" if order == "desc" else "ASC")
+    sql += " ORDER BY m.price " + ("DESC" if order == "desc" else "ASC") + ", m.menu_name"
     return fetch_all(sql, params)
 
 
@@ -74,4 +93,4 @@ if __name__ == "__main__":
     rows = search_menus(max_price=7000, category="한식")
     print(f"7,000원 이하 한식 메뉴 {len(rows)}개")
     for r in rows:
-        print(r)
+        print(f"  {r['store_name']} | {r['menu_name']} | {r['price']:,}원")
