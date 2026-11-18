@@ -72,7 +72,7 @@ with tab_menu:
         m1, m2, m3 = st.columns(3)
         m1.metric("검색된 메뉴", f"{len(rows)}개")
         m2.metric("최저가", f"{min(prices):,}원")
-        m3.metric("평균 가격", f"{round(sum(prices) / len(prices)):,}원")
+        m3.metric("최고가", f"{max(prices):,}원")
 
         cheapest = min(rows, key=lambda r: r["price"])
         st.success(
@@ -111,8 +111,8 @@ with tab_store:
         sdf["비고"] = sdf["is_sample"].map(sample_label)
         sdf = sdf.rename(columns={
             "store_name": "매장명", "store_type": "매장 유형", "building_name": "건물",
-            "location_info": "상세 위치", "menu_count": "판매 중 메뉴 수",
-        })[["매장명", "매장 유형", "건물", "상세 위치", "판매 중 메뉴 수", "비고"]]
+            "menu_count": "판매 중 메뉴 수",
+        })[["매장명", "매장 유형", "건물", "판매 중 메뉴 수", "비고"]]
         st.dataframe(sdf, hide_index=True, width="stretch")
 
         st.subheader("매장별 메뉴 보기")
