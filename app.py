@@ -46,7 +46,7 @@ with tab_menu:
             category = st.selectbox("음식 종류", categories)
         with c3:
             order_label = st.radio("가격 정렬", ["낮은 순", "높은 순"], horizontal=True)
-        st.form_submit_button("메뉴 추천받기", type="primary", width="stretch")
+        st.form_submit_button("메뉴 찾기", type="primary", width="stretch")
 
     rows = db.search_menus(
         keyword=keyword.strip(),
