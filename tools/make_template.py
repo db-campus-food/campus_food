@@ -92,7 +92,7 @@ def build():
     a = wb.create_sheet("관리자", 2)
     style_header(a, ["관리자명", "로그인아이디"], [20, 20])
     for i, (name, lid) in enumerate(
-            [("학생식당 관리자", "admin1"), ("음식점 관리자", "admin2"), ("카페 관리자", "admin3")], start=2):
+            [("○○식당 관리자", "admin1")], start=2):
         a.cell(row=i, column=1, value=name)
         a.cell(row=i, column=2, value=lid)
     a["D1"] = "※ 비밀번호는 여기에 쓰지 않습니다. 변환할 때 한꺼번에 정합니다."

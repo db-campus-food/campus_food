@@ -83,10 +83,6 @@ def yn(v):
     return "판매 중" if v else "품절"
 
 
-def sample_label(v):
-    return "샘플" if v else ""
-
-
 tab_menu, tab_store = st.tabs(["메뉴 관리", "매장 관리"])
 
 # ================= 탭 1: 메뉴 관리 =================
@@ -107,11 +103,10 @@ with tab_menu:
         if menus:
             df = pd.DataFrame(menus)
             df["판매 여부"] = df["is_available"].map(yn)
-            df["비고"] = df["is_sample"].map(sample_label)
             df = df.rename(columns={
                 "store_name": "매장명", "menu_name": "메뉴명", "price": "가격",
                 "category_name": "종류", "updated_at": "마지막 수정",
-            })[["매장명", "메뉴명", "가격", "종류", "판매 여부", "마지막 수정", "비고"]]
+            })[["매장명", "메뉴명", "가격", "종류", "판매 여부", "마지막 수정"]]
             st.dataframe(
                 df, hide_index=True, width="stretch",
                 column_config={"가격": st.column_config.NumberColumn("가격", format="%d원")},
@@ -160,11 +155,10 @@ with tab_store:
     st.subheader(f"내 매장 {len(stores)}개")
     if stores:
         sdf = pd.DataFrame(stores)
-        sdf["비고"] = sdf["is_sample"].map(sample_label)
         sdf = sdf.rename(columns={
             "store_name": "매장명", "store_type": "매장 유형", "building_name": "건물",
             "location_info": "상세 위치", "menu_count": "메뉴 수",
-        })[["매장명", "매장 유형", "건물", "상세 위치", "메뉴 수", "비고"]]
+        })[["매장명", "매장 유형", "건물", "상세 위치", "메뉴 수"]]
         st.dataframe(sdf, hide_index=True, width="stretch")
 
         st.subheader("매장 정보 수정")
