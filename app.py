@@ -22,10 +22,6 @@ except Exception as e:
     st.stop()
 
 
-def sample_label(v):
-    return "샘플" if v else ""
-
-
 # ---------- 화면 ----------
 st.title("교내 음식점·카페 메뉴 통합 검색")
 st.caption("학생식당 · 음식점 · 카페의 메뉴와 가격을 한 번에 비교하세요.")
@@ -82,19 +78,15 @@ with tab_menu:
 
         df = pd.DataFrame(rows)
         df["위치"] = df["building_name"] + " " + df["location_info"].fillna("")
-        df["비고"] = df["is_sample"].map(sample_label)
         df = df.rename(columns={
             "store_name": "매장명", "menu_name": "메뉴명", "price": "가격",
             "category_name": "종류", "store_type": "매장 유형",
-        })[["매장명", "메뉴명", "가격", "종류", "매장 유형", "위치", "비고"]]
+        })[["매장명", "메뉴명", "가격", "종류", "매장 유형", "위치"]]
 
         st.dataframe(
             df, hide_index=True, width="stretch",
             column_config={"가격": st.column_config.NumberColumn("가격", format="%d원")},
         )
-
-    if any(r["is_sample"] for r in rows):
-        st.caption("※ '샘플' 표시는 개발용 가상 데이터입니다. 실제 교내 데이터로 교체될 예정입니다.")
 
 # ===== 탭 2: 교내 매장 목록 (기능 1) =====
 with tab_store:
@@ -108,11 +100,10 @@ with tab_store:
         st.info("등록된 매장이 없습니다.")
     else:
         sdf = pd.DataFrame(stores)
-        sdf["비고"] = sdf["is_sample"].map(sample_label)
         sdf = sdf.rename(columns={
             "store_name": "매장명", "store_type": "매장 유형", "building_name": "건물",
             "menu_count": "판매 중 메뉴 수",
-        })[["매장명", "매장 유형", "건물", "판매 중 메뉴 수", "비고"]]
+        })[["매장명", "매장 유형", "건물", "판매 중 메뉴 수"]]
         st.dataframe(sdf, hide_index=True, width="stretch")
 
         st.subheader("매장별 메뉴 보기")

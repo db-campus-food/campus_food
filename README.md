@@ -11,21 +11,22 @@
    venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. MySQL Workbench에서 `sql/schema.sql` → `sql/seed.sql` 순서로 실행
+3. MySQL Workbench에서 `sql/schema.sql` → `sql/seed_real.sql` 순서로 실행
 4. `db_config.example.py`를 복사해 `db_config.py`로 만들고 본인 MySQL 비밀번호 입력
 5. 연결 테스트: `python db.py`
+
+관리자 계정: 매장마다 1명씩 `admin1` ~ `admin18` (엑셀 `매장` 시트 순서, 공통 비밀번호 `admin1234`). 누가 어느 매장 담당인지는 엑셀 `관리자`·`매장` 시트에서 확인한다.
 
 ## 실제 데이터 넣는 방법 (엑셀 → DB)
 
 1. `data/campus_menu.xlsx`를 열어 건물 → 관리자 → 매장 → 메뉴 시트 순서로 입력한다. (`안내` 시트에 규칙이 있음)
 2. 변환: `python tools/excel_to_seed.py` → `sql/seed_real.sql`이 만들어진다. 엑셀에 오류가 있으면 몇 행이 문제인지 알려 준다.
-3. Workbench에서 `sql/schema.sql` → `sql/seed_real.sql` 순서로 실행한다. (`seed.sql`은 가상 샘플용)
+3. Workbench에서 `sql/schema.sql` → `sql/seed_real.sql` 순서로 실행한다.
 
 ## 폴더 구조
 
 ```
 sql/schema.sql   테이블 생성
-sql/seed.sql     가상 샘플 데이터 (is_sample = TRUE)
 sql/seed_real.sql  실제 데이터 (엑셀에서 자동 생성)
 data/campus_menu.xlsx  데이터 입력 양식
 tools/           엑셀 양식 생성·엑셀→SQL 변환 스크립트
